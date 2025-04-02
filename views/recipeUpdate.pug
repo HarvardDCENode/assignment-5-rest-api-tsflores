@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  div.recipe-header
+    div.edit-recipe-details
+      form(action="/recipe/"+recipe._id+"/update-recipe" method="POST")
+        label(for="name") Recipe Name:
+        input(type="text" name="name" required value=recipe.name)
+
+        label(for="chef") Chef (or publisher):
+        input(type="text" name="chef" required value=recipe.chef)
+
+        label(for="description") Description:
+        textarea(name="description" 
+          rows="3"
+          maxlength="300" 
+          value=recipe.description 
+          style="width: 75%; min-height: 50px; max-height: 200px; resize: vertical;")
+
+        label(for="meal") Meal Type:
+        select(name = "meal")
+          option(value = recipe.meal) #{recipe.meal.charAt(0).toUpperCase()+recipe.meal.slice(1)}
+          option(value = "breakfast") Breakfast
+          option(value = "lunch") Lunch
+          option(value = "dinner") Dinner
+          option(value = "dessert") Dessert
+          option(value = "appetizer") Appetizer
+          option(value = "drink") Drinks
+          option(value = "side") Side Dish
+
+        label(for="preptime") Prep Time (min):
+        input.time-entry(type="number" name="preptime" min = "0" required value=recipe.preptime)
+
+        label(for="cooktime") Cook Time (min):
+        input.time-entry(type="number" name="cooktime" min = "0" required value=recipe.cooktime)
+    
+        button(type="submit") Update Recipe
+
+    div
+      img(src=recipe.image)
+  
+  br
+  hr

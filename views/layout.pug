@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title DishQuest
+    link(rel="stylesheet" href="/static/styles/styles.css")
+  body
+    header.heading
+      img#logo_style(src="/static/images/dishquest-logo.svg")
+      nav.navigation
+        a(href="/") Home
+        a(href="/add-recipe") Add Recipe
+     
+
+    main
+      block content  // Placeholder for page-specific content
+
+    .footer-container
+       footer 
+         p © #{new Date().getFullYear()} DishQuest
+         p This website is part of the CSCI E-31 course offered through 
+            a(href="https://extension.harvard.edu/") Harvard Extension School

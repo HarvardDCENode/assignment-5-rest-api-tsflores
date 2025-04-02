@@ -1,0 +1,308 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  max-width: 1480px;
+}
+
+body {
+  height: 100vh;
+  margin: 0 2vw;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Styling for the error page */
+.error-container {
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+}
+
+.error-container h1 {
+  font-size: 6rem;
+  color: #ff5733;
+  font-weight: 600;
+}
+
+.error-container h3,
+p {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.error-container p {
+  font-size: 1.5rem;
+  width: 30%;
+  text-align: center;
+}
+
+/* Styling for layout */
+.heading {
+  display: flex;
+  height: auto;
+  max-width: 650px;
+}
+
+#logo_style {
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+}
+
+.navigation {
+  width: 600px;
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.navigation a {
+  padding-right: 2rem;
+  text-align: center;
+}
+
+hr {
+  border-color: #ff5733;
+}
+
+.welcome {
+  padding-top: 2rem;
+}
+
+/* Styling for footer */
+
+.footer-container {
+  background-color: black;
+  margin-top: 4rem;
+  margin-left: 2rem;
+}
+
+footer p,
+footer a {
+  font-size: 1vw;
+  color: white;
+  margin: 0;
+}
+
+main {
+  padding-left: 2rem;
+  margin: auto;
+}
+main h2 {
+  font-size: 1.75vw;
+}
+
+main p {
+  font-size: 1.25vw;
+  color: black;
+}
+
+main h3 {
+  font-size: 1.5vw;
+}
+
+ul {
+  padding-left: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1rem 0 0 0;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  list-style-type: none;
+  margin: 0rem;
+}
+
+li img {
+  margin: 1rem;
+}
+
+li p {
+  margin-bottom: 0rem;
+}
+
+/* recipe.pug specific styling */
+
+.recipe-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.recipe-header img {
+  width: 500px;
+  max-width: 600px;
+}
+
+.recipe-details {
+  margin-right: 0rem;
+}
+
+.recipe-details h1 {
+  font-size: 3vw;
+  margin-bottom: 1rem;
+  font-family: cursive;
+}
+
+.recipe-details p {
+  font-size: 1.5vw;
+  margin-bottom: 0rem;
+  padding-bottom: 0.7rem;
+}
+
+.edit-button {
+  background-color: #2110d8;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 2rem;
+  margin-right: 2rem;
+}
+
+.delete-button {
+  background-color: #56061d;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 2rem;
+  margin-right: 2rem;
+}
+
+.pdf-styling{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: 100%;
+}
+
+/* Form related styling */
+
+form button {
+  background-color: #bf2e1a;
+  border-style: none;
+  color: white;
+  font-weight: bold;
+  /* margin-left: 2rem; */
+  margin-top: 2rem;
+}
+
+form button[type="submit"] {
+  font-size: 1rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+}
+
+form label,
+form input,
+form select,
+form textarea {
+  display: block;
+  margin-bottom: 0.75rem;
+  margin-left: 0;
+}
+
+form label {
+  font-weight: bold;
+}
+
+form select {
+  width: 200px;
+  max-width: 300px;
+  font-size: 1.25rem;
+  border-radius: 8px;
+}
+
+#img-form-control {
+  display: none;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.custom-file-upload:hover {
+  background-color: #0056b3;
+}
+
+form input {
+  width: 75%;
+}
+
+.time-entry {
+  width: 25%;
+}
+
+form input[type="text"],
+form input[type="number"] {
+  font-size: 1.25rem;
+}
+
+.form-separator {
+  border-color: gray;
+  margin-left: 0rem;
+  width: 20vw;
+}
+
+.msg-style{
+  /* padding-bottom: 1rem; */
+  background-color: #f7052d;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 2rem;
+  margin-right: 2rem;
+
+}
+
+.edit-recipe-details{
+  margin:0rem;
+  width: 50%;
+}
+
+@media screen and (min-width: 1280px) {
+  main h2 {
+    font-size: 1vw;
+  }
+
+  main p {
+    font-size: 0.75vw;
+  }
+
+  main h3 {
+    font-size: 1vw;
+  }
+
+  footer p,
+  footer a {
+    font-size: 0.5vw;
+  }
+
+  .recipe-details h1 {
+    font-size: 1.5vw;
+  }
+
+  .recipe-details p {
+    font-size: 0.75vw;
+  }
+}

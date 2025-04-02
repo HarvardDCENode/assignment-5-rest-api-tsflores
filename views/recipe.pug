@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  div.recipe-header
+    div.recipe-details
+      h1= recipe.name
+      p By: #{recipe.chef}
+      p Meal: #{recipe.meal.charAt(0).toUpperCase()+recipe.meal.slice(1)}
+      p Prep-time: #{recipe.preptime}
+      p Cook-time: #{recipe.cooktime}
+      if recipe.updatedAt
+        p Last Updated: #{recipe.updatedAt.toLocaleDateString('en-US')}
+      else
+        p Last Updated: #{recipe.createdAt.toLocaleDateString('en-US')}
+      a.edit-button(href='/recipe/'+recipe._id+"/edit-recipe") Edit Recipe Data
+      //treat the delete option as a form with a Post method to eliminate use of another template
+      form(method="POST" action='/recipe/'+recipe._id+'/delete-recipe' style="display: inline" onsubmit="return confirmDelete()")
+        button.delete-button(type="submit") Delete Recipe
+    div
+      img(src=recipe.image)
+  
+  br
+  hr
+  br
+  if recipe.recipePDF
+    iframe.pdf-styling(src=recipe.recipePDF)
+  else
+    p Recipe details including ingredients and steps coming soon...
+
+  //simple javascript to create pop-up for delete confirmation
+  script.
+    function confirmDelete() {
+      return confirm('Are you sure you want to delete this recipe?');
+    }
