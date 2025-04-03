@@ -3,7 +3,7 @@ extends layout
 block content
   div.recipe-header
     div.edit-recipe-details
-      form(action="/recipe/"+recipe._id+"/update-recipe" method="POST")
+      form(action="/recipes/"+recipe._id+"/update-recipe" method="POST")
         label(for="name") Recipe Name:
         input(type="text" name="name" required value=recipe.name)
 

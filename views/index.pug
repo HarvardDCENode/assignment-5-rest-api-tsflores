@@ -12,7 +12,7 @@ block content
       each recipe in recipes
         li
           img(src=recipe.image, width="250")
-          a(href='/recipe/' + recipe._id) #{recipe.name}
+          a(href='/recipes/' + recipe._id) #{recipe.name}
           p By: #{recipe.chef}
           p Total Time: #{parseInt(recipe.preptime) + parseInt(recipe.cooktime)} minutes
           p Added On: #{recipe.createdAt.toLocaleDateString('en-US')}

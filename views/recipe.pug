@@ -12,9 +12,9 @@ block content
         p Last Updated: #{recipe.updatedAt.toLocaleDateString('en-US')}
       else
         p Last Updated: #{recipe.createdAt.toLocaleDateString('en-US')}
-      a.edit-button(href='/recipe/'+recipe._id+"/edit-recipe") Edit Recipe Data
+      a.edit-button(href='/recipes/'+recipe._id+"/edit-recipe") Edit Recipe Data
       //treat the delete option as a form with a Post method to eliminate use of another template
-      form(method="POST" action='/recipe/'+recipe._id+'/delete-recipe' style="display: inline" onsubmit="return confirmDelete()")
+      form(method="POST" action='/recipes/'+recipe._id+'/delete-recipe' style="display: inline" onsubmit="return confirmDelete()")
         button.delete-button(type="submit") Delete Recipe
     div
       img(src=recipe.image)
