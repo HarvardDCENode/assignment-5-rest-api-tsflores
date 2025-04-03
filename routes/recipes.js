@@ -10,6 +10,7 @@ const Recipe = require("../models/recipeModel");
 const path = require('node:path');
 const fs = require('node:fs');
 
+const RecipeService = recipeController.RecipeService;
 
 //from the multer documentation on using .fields for multiple files
 const upload = multer({
@@ -24,7 +25,7 @@ router.use(flash());
 
 //root renders the index.pug template with a display of the recipes in the database
 router.get("/", (req, res, next) => {
-	Recipe.find({})
+	RecipeService.list()
 		.then((recipes) => {
 			res.render("index", { recipes });
 		})
@@ -40,7 +41,7 @@ router.get("/add-recipe", (req, res, next) => {
 	res.render("form", { flashMsg: req.flash("fileUploadError") });
 });
 
-//post action when the form is submitted by the user to update documents within the collection
+//post action when the form is submitted by the user to add a new recipe or document to the database
 router.post("/submit-recipe", upload, (req, res, next) => {
 	const imagepath = `/static/images/${req.files.image[0].filename}`;
 	const pdfpath = req.files.recipePDF
@@ -73,8 +74,8 @@ router.post("/submit-recipe", upload, (req, res, next) => {
 });
 
 //renders the recipe pug template based on the id stored in the recipes array (index of the array)
-router.get("/recipe/:recipeid", (req, res, next) => {
-	Recipe.findOne({ _id: req.params.recipeid })
+router.get("/recipes/:recipeid", (req, res, next) => {
+	RecipeService.find(req.params.recipeid)
 		.then((recipe) => {
 			res.render("recipe", { recipe });
 		})
@@ -84,9 +85,8 @@ router.get("/recipe/:recipeid", (req, res, next) => {
 });
 
 //route handler to that renders from to allow user to edit meta-data on an existing recipe
-router.get("/recipe/:recipeid/edit-recipe", (req, res, next) => {
-	console.log(`finding ${req.params.recipeid}`);
-	Recipe.findOne({ _id: req.params.recipeid })
+router.get("/recipes/:recipeid/edit-recipe", (req, res, next) => {
+	RecipeService.find(req.params.recipeid)
 		.then((recipe) => {
 			res.render("recipeUpdate", { recipe });
 		})
@@ -96,8 +96,9 @@ router.get("/recipe/:recipeid/edit-recipe", (req, res, next) => {
 });
 
 //route handler to update the database document if user has updated any meta-data on an existing recipe
-router.post("/recipe/:recipeid/update-recipe", (req, res, next) => {
-	Recipe.findOne({ _id: req.params.recipeid })
+router.post("/recipes/:recipeid/update-recipe", (req, res, next) => {
+	
+	RecipeService.find(req.params.recipeid)
 		.then((recipe) => {
 			const data = {
 				name: req.body.name,
@@ -109,7 +110,7 @@ router.post("/recipe/:recipeid/update-recipe", (req, res, next) => {
 			};
 			recipe.set(data);
 			recipe.save().then(() => {
-				res.redirect(`/recipe/${req.params.recipeid}`);
+				res.redirect(`/recipes/${req.params.recipeid}`);
 			});
 		})
 		.catch((err) => {
@@ -119,7 +120,7 @@ router.post("/recipe/:recipeid/update-recipe", (req, res, next) => {
 
 //route handler to delete a recipe from the database using the findById methods
 //the handler will also delete the image and, if available, the pdf version of the recipe
-router.post("/recipe/:recipeid/delete-recipe", (req, res, next) => {
+router.post("/recipes/:recipeid/delete-recipe", (req, res, next) => {
 	
 	Recipe.findById(req.params.recipeid)
 		.then((recipe) => {

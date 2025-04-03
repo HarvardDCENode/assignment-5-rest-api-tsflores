@@ -7,11 +7,12 @@ const bodyparser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const api_recipes = require('./routes/api/api-recipes');
 require('dotenv').config();
 
 const app = express();
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PWD}@clustere31.bxve7.mongodb.net/?retryWrites=true&w=majority&appName=ClusterE31`, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PWD}@clustere31.bxve7.mongodb.net/recipeApp?retryWrites=true&w=majority&appName=ClusterE31`, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(()=>{
   console.log('connected to database.');
 })
@@ -29,6 +30,7 @@ app.use(session({
 
 //middleware to add body to the request handler
 app.use(bodyparser.urlencoded({extended: false}));
+app.use(express.json());
 
 //use pug to generate html from templates stored in views directory
 app.set('view engine', 'pug');
@@ -39,6 +41,8 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 
 //use the recipe router module as the primary root when application is launched
 app.use('/', recipe_router);
+
+app.use('/api/recipes', api_recipes);
 
 //custom 404 error static page middleware to serve error.html when appropriate
  app.use((req, res, next) => {
