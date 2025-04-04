@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const api_recipes = require('./routes/api/api-recipes');
+const router = express.Router();
 require('dotenv').config();
 
 const app = express();
@@ -39,9 +40,13 @@ app.set('views', './views');
 //serve up any static files in the public directory
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
+//have Express automatically deliver index.html from public directory for purposes of testing API
+// app.use('/', express.static(path.join(__dirname, 'public')));
+
 //use the recipe router module as the primary root when application is launched
 app.use('/', recipe_router);
 
+//set up middleware for the api route
 app.use('/api/recipes', api_recipes);
 
 //custom 404 error static page middleware to serve error.html when appropriate

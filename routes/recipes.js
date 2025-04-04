@@ -88,6 +88,7 @@ router.get("/recipes/:recipeid", (req, res, next) => {
 router.get("/recipes/:recipeid/edit-recipe", (req, res, next) => {
 	RecipeService.find(req.params.recipeid)
 		.then((recipe) => {
+			console.log(recipe);
 			res.render("recipeUpdate", { recipe });
 		})
 		.catch((err) => {

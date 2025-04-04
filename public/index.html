@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Testing the Recipe Collections API</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  </head>
+  <body class="vsc-initialized">
+    <div class="container">
+      <h3 class = "pt-3">Recipe Collection API test</h3>
+      <p>This page tests the Recpie Collections API by listing all recipes in the database; then creating, finding, modifying, and deleting a recipe resource using
+      the REST API.
+      <br />
+      <br />  
+      See the console for output as the process completes.
+      </p>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-3">
+            <div class="form-group">
+              <label for="image">Image (required input either as jpeg, webp, png, gif, or jpg format):</label>
+              <input class="form-control" id="image" type="file" name="image">
+            </div>
+            <div class="form-group">
+              <label for="reciepPDF">Recipe (optional PDF version of the recipe):</label>
+              <input class="form-control" id="recipePDF" type="file" name="recipePDF">
+            </div>
+            <button class="btn btn-primary" id="testme" type="button">Test the API</button>
+        </div>
+      </div>
+      <hr class="border border-primary border-3 opacity-75"/>
+      <div id = "test-results">
+        
+      </div>
+    </div>
+    <script type="text/javascript" src="js/api-async-await.js"></script>
+  </body>
+</html>

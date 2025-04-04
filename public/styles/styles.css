@@ -45,7 +45,7 @@ p {
 .heading {
   display: flex;
   height: auto;
-  max-width: 650px;
+  max-width: 850px;
 }
 
 #logo_style {
@@ -55,7 +55,7 @@ p {
 }
 
 .navigation {
-  width: 600px;
+  width: 700px;
   font-size: 1.25rem;
   display: flex;
   flex-direction: row;
