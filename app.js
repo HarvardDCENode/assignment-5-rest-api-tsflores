@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const api_recipes = require('./routes/api/api-recipes');
-const router = express.Router();
 require('dotenv').config();
 
 const app = express();
