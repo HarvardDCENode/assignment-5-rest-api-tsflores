@@ -60,7 +60,7 @@ class RecipeService {
 				return recipes;
 			})
 			.catch((error) => {
-				console.error(`Error retrieving list of recipes: ${error}`);
+				console.error(`Error retrieving list of recipes via List: ${error}`);
 				throw new Error(
 					`Failed to retrieve current recipes in database: ${error.message}`,
 				);
@@ -83,7 +83,7 @@ class RecipeService {
 				return recipe;
 			})
 			.catch((error) => {
-				console.error(`Error locating recipe with id ${id}`);
+				console.error(`Error locating recipe with id ${id} via Find`);
 				throw new Error(`Invalid recipe ID: ${error.message}`);
 			});
 	}
@@ -92,7 +92,7 @@ class RecipeService {
 	static create(obj) {
 		const recipe = new Recipe(obj);
 		return recipe.save().catch((error) => {
-			console.error("Error creating new recipe object", error);
+			console.error("Error creating new recipe object within the recipeController", error);
 			throw new Error(`Failed to create a new recipe: ${error.message}`);
 		});
 	}
@@ -119,7 +119,7 @@ class RecipeService {
 				if (error.name === "CastError") {
 					throw new Error(`Invalid format for recipe id: ${id}`);
 				}
-				console.error(`Error updating recipe with id ${id}`, error);
+				console.error(`Error updating recipe via Update with id ${id}`, error);
 				throw error;
 			});
 	}
@@ -141,7 +141,7 @@ class RecipeService {
 				if (error.name === "CastError") {
 					throw new Error(`Invalid format for recipe id: ${id}`);
 				}
-				console.error(`Error delting recipe with id ${id}`);
+				console.error(`Error deleting recipe with id ${id}`);
 				throw error;
 			});
 	}

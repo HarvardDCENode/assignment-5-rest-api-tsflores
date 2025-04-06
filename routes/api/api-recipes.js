@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const recipeController = require("../../controllers/recipeController");
-
 const RecipeService = recipeController.RecipeService;
-// const path = require('node:path');
-// const fs = require('node:fs');
 
 //from the multer documentation on using .fields for multiple files
 const upload = multer({
@@ -21,8 +18,9 @@ router.use((req, res, next) => {
 		// allow any domain, allow REST methods we've implemented
 		"Access-Control-Allow-Origin": "*",
 		"Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,OPTIONS",
-		"Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers",
-		"Content-type": "application/json"
+		"Access-Control-Allow-Headers":
+			"Content-Type, Access-Control-Allow-Headers",
+		"Content-type": "application/json",
 	});
 	if (req.method === "OPTIONS") {
 		return res.status(200).end();
@@ -55,25 +53,28 @@ router.post("/", upload, async (req, res, next) => {
 		res.status(201);
 		res.send(JSON.stringify(recipeCreate));
 	} catch (error) {
-		console.log(error);
+		console.log("Error on the POST within api-recipes", error);
 		res.status(500).send(JSON.stringify({ error: error.message }));
 	}
 });
 
 // return all of the documents in the database
 router.get("/", (req, res, next) => {
-	RecipeService.list().then((recipes) => {
-		res.status(200);
-		res.send(JSON.stringify(recipes));
-	});
+	RecipeService.list()
+		.then((recipes) => {
+			res.status(200).json(recipes);
+		})
+		.catch((error) => {
+			console.error("Error retrieving recipes:", error);
+			res.status(500).json({ error: error.message || "Failed to retrieve recipes" });
+		});
 });
 
 // find a specific document by id in the database
 router.get("/:recipeid", (req, res, next) => {
 	RecipeService.find(req.params.recipeid)
 		.then((recipe) => {
-			res.status(200);
-			res.send(JSON.stringify(recipe));
+			res.status(200).json(recipe);
 		})
 		.catch((err) => {
 			res.status(404);
@@ -84,8 +85,6 @@ router.get("/:recipeid", (req, res, next) => {
 // update properties within a specific document by id in the database
 router.put("/:recipeid", (req, res, next) => {
 	const put_data = req.body;
-	console.log("Here is the body of the request");
-	console.log(put_data.name);
 	RecipeService.update(req.params.recipeid, put_data)
 		.then((updatedRecipe) => {
 			res.status(200);
@@ -94,7 +93,7 @@ router.put("/:recipeid", (req, res, next) => {
 		})
 		.catch((err) => {
 			res.status(404);
-			res.send(end);
+			res.send(err);
 		});
 });
 
@@ -107,7 +106,7 @@ router.delete("/:recipeid", (req, res, next) => {
 		})
 		.catch((err) => {
 			res.status(404);
-			res.send(end);
+			res.send(err);
 		});
 });
 

@@ -2,10 +2,7 @@
 
 const express = require('express');
 const path = require('node:path');
-const recipe_router = require('./routes/recipes');
 const bodyparser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 const mongoose = require('mongoose');
 const api_recipes = require('./routes/api/api-recipes');
 require('dotenv').config();
@@ -21,29 +18,15 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PWD}@clu
   process.exit();
 });
 
-app.use(cookieParser('recipe-secret'));
-app.use(session({
-  secret:"recipeapp",
-  resave: "true",
-  saveUninitialized: "true"
-}));
-
 //middleware to add body to the request handler
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(express.json());
-
-//use pug to generate html from templates stored in views directory
-app.set('view engine', 'pug');
-app.set('views', './views');
 
 //serve up any static files in the public directory
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
 //have Express automatically deliver index.html from public directory for purposes of testing API
-// app.use('/', express.static(path.join(__dirname, 'public')));
-
-//use the recipe router module as the primary root when application is launched
-app.use('/', recipe_router);
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 //set up middleware for the api route
 app.use('/api/recipes', api_recipes);

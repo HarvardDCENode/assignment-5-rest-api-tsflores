@@ -5,25 +5,45 @@
 	const baseURL = ""; //  for development, it's http://localhost:3000
 
 	async function testAPIs() {
-		try {
-			// find test_results ID, append results as API test runs, and output to HTML
-			const results = document.getElementById("test_results");
-			results.innerHTML = "<h5>Running API Tests...</h5>";
-			let testOutput = "<h6>API Test Results:</h6>";
+		// find test_results ID, append results as API test runs, and output to HTML
+		const results = document.getElementById("test_results");
+		results.innerHTML = "<h5>Running API Tests...</h5>";
+		let testOutput = "<h6>API Test Results:</h6>";
 
-			/*************************************************************************************************************************/
-			/***** Use REST API to get all documents that currently exist in the collection    * *************************************/
-			/*************************************************************************************************************************/
+		//try-catch wrapper for the entire application
+		try {
+			//find ids for the image and PDF uploads and make sure no issues with either of these two file
+			const inputImage = document.getElementById("image");
+			const inputPDF = document.getElementById("recipePDF");
+
+			const imageFile = inputImage.files[0];
+			const pdfFile = inputPDF.files[0];
+
+			if (!imageFile.type.startsWith("image/")) {
+				throw new Error(
+					"Selected file is not a valid image.  Please select a file with a jpg, jpeg, webp, png, or gif extension.",
+				);
+			}
+
+			if (pdfFile && pdfFile.type !== "application/pdf") {
+				throw new Error(
+					"Recipe upload selection is not a valid PDF file.  Please select a valid PDF file.",
+				);
+			}
+
+			/******************************************************************************************************************************/
+			/***** Use REST API to get all documents that currently exist in the collection  **********************************************/
+			/******************************************************************************************************************************/
+
 			const list = await callAPI("GET", "/api/recipes", null, null);
 			console.log("\n\n**************\nlist results:");
 			console.log(list);
 
 			//output results of list to the HTML by appending to testOutput
-			testOutput += `<p><strong>Database List Results via GET method:</strong> Found ${
-				list.length
-			} ${list.length !== 1 ? "recipes" : "recipe"} in the database:</p>`;
+			testOutput += `<p><strong>Database List Results via GET method:</strong> Found ${list.length} ${list.length !== 1 ? "recipes" : "recipe"} in the database:</p>`;
 			if (list.length > 0) {
 				testOutput += "<ul>";
+
 				// biome-ignore lint/complexity/noForEach: <explanation>
 				list.forEach((recipe) => {
 					testOutput += `<li> ${recipe.name} </li>`;
@@ -35,38 +55,21 @@
 			results.innerHTML = testOutput;
 
 			/*************************************************************************************************************************/
-			/***** Create a new record by first getting the files that were uploaded by the user *************************************/
+			/***** Create a new record by first getting the files that were uploaded by the user; try-catch block on series of calls */
 			/*************************************************************************************************************************/
-			const inputImage = document.getElementById("image");
-			const inputPDF = document.getElementById("recipePDF");
-
-			const imageFile = inputImage.files[0];
-			const pdfFile = inputPDF.files[0];
-
 			const data = new FormData();
 
-			//already check to see that a file was upload so check that the image uploaded matches expectations - if not, log error to user and exit
-			if (imageFile.type.startsWith("image/")) {
-				data.append("image", imageFile);
-			} else {
-				results.innerHTML = `${testOutput}<p class='text-danger'><strong>Error:</strong> No image file found or improper format! Please select a valid image file.</p>`;
-				return;
-			}
-
-			//append PDF file if included with proper type; if included but wrong type, log error to user
-			if (pdfFile && pdfFile.type === "application/pdf") {
-				data.append("recipePDF", pdfFile);
-			} else if (pdfFile && pdfFile.type !== "application/pdf") {
-				results.innerHTML = `${testOutput}<p class='text-danger'><strong>Error:</strong> Recipe upload is not a PDF file! Please select a valid file.</p>`;
-				return;
-			}
-
+			data.append("image", imageFile);
 			data.append("name", "Recipe Name");
 			data.append("chef", "Recipe Contributor");
 			data.append("description", "Recipe Description");
 			data.append("meal", "Recipe Type");
 			data.append("preptime", "Recipe Preptime");
 			data.append("cooktime", "Recipe Cooktime");
+
+			if (pdfFile) {
+				data.append("recipePDF", pdfFile);
+			}
 
 			const newRecipe = await callAPI("POST", "/api/recipes", null, data);
 			if (newRecipe) {
@@ -84,77 +87,79 @@
 				testOutput += "</ul>";
 
 				results.innerHTML = testOutput;
+
+				/*************************************************************************************************************************/
+				/***** Edit the description of the document and use find change with the REST API    *************************************/
+				/*************************************************************************************************************************/
+
+				const retreivedNewRecipe = await callAPI(
+					"GET",
+					`/api/recipes/${newRecipe._id}`,
+					null,
+					null,
+				);
+				console.log("\n\n**************\nfind results:");
+				console.log(retreivedNewRecipe);
+
+				// logging the id of the recipe found
+				testOutput += `<p><strong>Found recipe id via GET method: </strong>: ${retreivedNewRecipe._id} </p>`;
+
+				results.innerHTML = testOutput;
+
+				// update description
+				retreivedNewRecipe.description = "Modified by the AJAX API";
+				const updatedRecipe = await callAPI(
+					"PUT",
+					`/api/recipes/${retreivedNewRecipe._id}`,
+					null,
+					retreivedNewRecipe,
+				);
+
+				console.log("\n\n*************\nupdate results:");
+				console.log(updatedRecipe);
+
+				// now find again to confirm that the description update was changed
+				const retreivedUpdatedRecipe = await callAPI(
+					"GET",
+					`/api/recipes/${updatedRecipe._id}`,
+					null,
+					null,
+				);
+				console.log(
+					"\n\n*************\nfind results (should contain updated description field):",
+				);
+				console.log(retreivedUpdatedRecipe);
+
+				// logging the change to the description for the PUT method
+				testOutput += `<p><strong>Updated recipe description via PUT method to: </strong>: ${retreivedUpdatedRecipe.description} </p>`;
+
+				testOutput += "<ul>";
+				for (const key in retreivedUpdatedRecipe) {
+					testOutput += `<li> ${key}: ${retreivedUpdatedRecipe[key]} </li>`;
+				}
+
+				testOutput += "</ul>";
+
+				results.innerHTML = testOutput;
+
+				/*************************************************************************************************************************/
+				/***** Delete the document that was created at the start of the process via REST API *************************************/
+				/*************************************************************************************************************************/
+
+				const deletedRecipe = await callAPI(
+					"DELETE",
+					`/api/recipes/${retreivedUpdatedRecipe._id}`,
+					null,
+					null,
+				);
+				console.log(deletedRecipe);
+				testOutput += `<p><strong>Deleted ${deletedRecipe.deletedCount} recipe via a DELETE method with ID of ${retreivedUpdatedRecipe._id}</strong></p>`;
+				results.innerHTML = testOutput;
 			}
-
-			/*************************************************************************************************************************/
-			/***** Edit the description of the document and use find change with the REST API    *************************************/
-			/*************************************************************************************************************************/
-			const retreivedNewRecipe = await callAPI(
-				"GET",
-				`/api/recipes/${newRecipe._id}`,
-				null,
-				null,
-			);
-			console.log("\n\n**************\nfind results:");
-			console.log(retreivedNewRecipe);
-
-			// logging the id of the recipe found
-			testOutput += `<p><strong>Found recipe id via GET method: </strong>: ${retreivedNewRecipe._id} </p>`;
-
-			results.innerHTML = testOutput;
-
-			// update description
-			retreivedNewRecipe.description = "Modified by the AJAX API";
-			const updatedRecipe = await callAPI(
-				"PUT",
-				`/api/recipes/${retreivedNewRecipe._id}`,
-				null,
-				retreivedNewRecipe,
-			);
-
-			console.log("\n\n*************\nupdate results:");
-			console.log(updatedRecipe);
-
-			// now find again to confirm that the description update was changed
-			const retreivedUpdatedRecipe = await callAPI(
-				"GET",
-				`/api/recipes/${updatedRecipe._id}`,
-				null,
-				null,
-			);
-			console.log(
-				"\n\n*************\nfind results (should contain updated description field):",
-			);
-			console.log(retreivedUpdatedRecipe);
-
-			// logging the change to the description for the PUT method
-			testOutput += `<p><strong>Updated recipe description via PUT method to: </strong>: ${retreivedUpdatedRecipe.description} </p>`;
-
-			testOutput += "<ul>";
-			for (const key in retreivedUpdatedRecipe) {
-				testOutput += `<li> ${key}: ${retreivedUpdatedRecipe[key]} </li>`;
-			}
-
-			testOutput += "</ul>";
-
-			results.innerHTML = testOutput;
-
-			/*************************************************************************************************************************/
-			/***** Delete the document that was created at the start of the process via REST API *************************************/
-			/*************************************************************************************************************************/
-			const deletedRecipe = await callAPI(
-				"DELETE",
-				`/api/recipes/${retreivedUpdatedRecipe._id}`,
-				null,
-				null,
-			);
-			console.log(deletedRecipe);
-			testOutput += `<p><strong>Deleted ${deletedRecipe.deletedCount} recipe via a DELETE method with ID of ${retreivedUpdatedRecipe._id}</strong></p>`;
-			results.innerHTML = testOutput;
-		} catch (err) {
-			console.error(err);
-			const results = document.getElementById("test_results");
-			results.innerHTML += `<p class='text-danger'><strong>Error:</strong> ${err.message}</p>`;
+		} catch (error) {
+			console.error("Test API Error: ", error);
+			results.innerHTML += `${testOutput}<p class='text-danger'><strong>Error:</strong> ${err.message}</p>`;
+			return;
 		}
 	} //end testAPIs
 
