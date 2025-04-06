@@ -7,8 +7,7 @@
   <body class="vsc-initialized">
     <div class="container">
       <h3 class = "pt-3">Recipe Collection API test</h3>
-      <p>This page tests the Recpie Collections API by listing all recipes in the database; then creating, finding, modifying, and deleting a recipe resource using
-      the REST API.
+      <p>This page tests the Recpie Collections API by listing all recipes in the database.  It then creates, finds, modifies, and deletes a recipe resource using the REST API.
       <br />
       <br />  
       Results of the API test will appear below.  See the console for more detailed output as the process completes.
@@ -16,12 +15,12 @@
       <div class="row">
         <div class="col-md-8 col-md-offset-3">
             <div class="form-group">
-              <label for="image">Image (required input either as jpeg, webp, png, gif, or jpg format):</label>
+              <label for="image"><strong>Image (required input either as jpeg, webp, png, gif, or jpg format):</strong></label>
               <input class="form-control" id="image" type="file" name="image">
             </div>
             <div class="form-group">
-              <label for="reciepPDF">Recipe (optional PDF version of the recipe):</label>
-              <input class="form-control" id="recipePDF" type="file" name="recipePDF">
+              <label for="reciepPDF"><strong>Recipe (optional PDF version of the recipe):</strong></label>
+              <input class="form-control" id="recipePDF" type="file" name="recipePDF" accept = "application/pdf">
             </div>
             <button class="btn btn-primary" id="testme" type="button">Test the API</button>
         </div>
