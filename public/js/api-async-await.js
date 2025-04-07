@@ -2,7 +2,7 @@
 
 // wrap in IIFE to control scope
 (() => {
-	const baseURL = ""; //  for development, it's http://localhost:3000
+	const baseURL = ""; //  for development, it's http://localhost:8080
 
 	async function testAPIs() {
 		// find test_results ID, append results as API test runs, and output to HTML
