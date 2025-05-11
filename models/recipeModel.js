@@ -6,12 +6,13 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
 	name: { type: String, required: true },
 	chef: { type: String, required: true },
-	description: { type: String, required: false },
+	description: { type: String, required: true },
 	meal: { type: String, required: true },
 	preptime: { type: String, required: true },
 	cooktime: { type: String, required: true },
 	image: { type: String, required: true },
-	recipePDF: { type: String, required: false },
+	recipePDF: { type: String, required: true },
+	favorite: {type: Boolean, required: false},
 	createdAt: { type: Date },
 	updatedAt: { type: Date },
 });
