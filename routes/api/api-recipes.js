@@ -70,6 +70,18 @@ router.get("/", (req, res, next) => {
 		});
 });
 
+//return any recipes in the collection that have favorite set to true
+router.get("/favorites", (req,res,next) => {
+	RecipeService.favorite()
+	.then((recipes) => {
+		res.status(200).json(recipes);
+	})
+	.catch((error) => {
+		console.error("Error retrieving favorite recipes:", error);
+		res.status(500).json({error: error.message || "Failed to retrieve favorite recipes"});
+	});
+});
+
 // find a specific document by id in the database
 router.get("/:recipeid", (req, res, next) => {
 	RecipeService.find(req.params.recipeid)

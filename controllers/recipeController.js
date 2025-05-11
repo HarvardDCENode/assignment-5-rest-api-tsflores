@@ -88,6 +88,21 @@ class RecipeService {
 			});
 	}
 
+	//method to find recipes with query filter where favorite is set to true
+	static favorite() {
+		return Recipe.find({favorite: true})
+			.then((recipes) => {
+				if(!recipes) {
+					throw new Error('No favorites found');
+				}
+				return recipes
+			})
+			.catch((error) => {
+				console.error('Error locating any recipes with favorite flag set to true');
+				throw new Error(`Favorite recipe error: ${error.message}`);
+			});
+	}
+
 	// method to create a new document in the database
 	static create(obj) {
 		const recipe = new Recipe(obj);
